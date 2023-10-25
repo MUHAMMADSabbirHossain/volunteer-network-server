@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send(`vounteer-network-server is listening to port: ${port}`);
-})
+});
 
 // port listening
 app.listen(port, () => {
