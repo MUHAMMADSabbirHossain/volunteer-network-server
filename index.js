@@ -1,9 +1,10 @@
 // import
 const express = require('express');
+const port = process.env.PORT || 5000;
 
 const app = express();
 
 // port listening
-app.listen(5000, () => {
-    console.log("vounteer-network-server is listening to port: 5000");
+app.listen(port, () => {
+    console.log("vounteer-network-server is listening to port: ", port);
 });
