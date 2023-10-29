@@ -32,6 +32,16 @@ async function run() {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
 
+        const volunteerCollection = client.db("volunteerNetwork").collection("volunteer");
+
+        app.get("/volunteers", async (req, res) => {
+            const query = {};
+            const cursor = volunteerCollection.find(query);
+            const volunteers = await cursor.toArray();
+            console.log(volunteers);
+            res.send(volunteers);
+        })
+
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
