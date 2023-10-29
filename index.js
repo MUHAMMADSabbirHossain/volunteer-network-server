@@ -28,19 +28,30 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
 
         const volunteerCollection = client.db("volunteerNetwork").collection("volunteer");
 
+        // get
         app.get("/volunteers", async (req, res) => {
             const query = {};
             const cursor = volunteerCollection.find(query);
             const volunteers = await cursor.toArray();
             console.log(volunteers);
             res.send(volunteers);
-        })
+        });
+
+        // post
+        app.post("/volunteers", async (req, res) => {
+            const newVolunteer = req.body;
+            console.log(newVolunteer);
+            const result = await volunteerCollection.insertOne(newVolunteer);
+            res.send(result);
+        });
+
+
 
     } finally {
         // Ensures that the client will close when you finish/error
