@@ -31,15 +31,17 @@ async function run() {
         // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-
-        const volunteerCollection = client.db("volunteerNetwork").collection("volunteer");
+        //volunteers
+        const eventsCollection = client.db("volunteerNetwork").collection("volunteer");
+        // volunteersDetail
+        const volunteersDetailCollection = client.db("volunteersDetail").collection("volunteersDetail");
 
         // get
         app.get("/volunteers", async (req, res) => {
             const query = {};
-            const cursor = volunteerCollection.find(query);
+            const cursor = eventsCollection.find(query);
             const volunteers = await cursor.toArray();
-            console.log(volunteers);
+            // console.log(volunteers);
             res.send(volunteers);
         });
 
@@ -47,11 +49,27 @@ async function run() {
         app.post("/volunteers", async (req, res) => {
             const newVolunteer = req.body;
             console.log(newVolunteer);
-            const result = await volunteerCollection.insertOne(newVolunteer);
+            const result = await eventsCollection.insertOne(newVolunteer);
             res.send(result);
         });
 
 
+        // get 
+        app.get("/volunteers-detail", async (req, res) => {
+            const query = {};
+            const cursor = volunteersDetailCollection.find(query);
+            const volunteersDetail = await cursor.toArray();
+            console.log(volunteersDetail);
+            res.send(volunteersDetail);
+        });
+
+        // post 
+        app.post("/volunteers-detail", async (req, res) => {
+            const newVolunteer = req.body;
+            console.log(newVolunteer);
+            const result = await volunteersDetailCollection.insertOne(newVolunteer);
+            res.send(result);
+        });
 
     } finally {
         // Ensures that the client will close when you finish/error
