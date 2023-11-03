@@ -31,12 +31,13 @@ async function run() {
         // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-        //volunteers
+        //all events 
         const eventsCollection = client.db("volunteerNetwork").collection("volunteer");
         // volunteersDetail
         const volunteersDetailCollection = client.db("volunteersDetail").collection("volunteersDetail");
 
-        // get
+
+        // get events
         app.get("/volunteers", async (req, res) => {
             const query = {};
             const cursor = eventsCollection.find(query);
@@ -45,25 +46,16 @@ async function run() {
             res.send(volunteers);
         });
 
-        // post
-        app.post("/volunteers", async (req, res) => {
-            const newVolunteer = req.body;
-            // console.log(newVolunteer);
-            const result = await eventsCollection.insertOne(newVolunteer);
-            res.send(result);
-        });
-
-
-        // get 
+        // get volunteersDetail
         app.get("/volunteers-detail", async (req, res) => {
             const query = {};
             const cursor = volunteersDetailCollection.find(query);
             const volunteersDetail = await cursor.toArray();
-            // console.log(volunteersDetail);
+            console.log(volunteersDetail);
             res.send(volunteersDetail);
         });
 
-        // get
+        // get selectedEvent
         app.get("/register-as-volunteer/:eventId", async (req, res) => {
             const id = req.params.eventId;
             const query = { _id: new ObjectId(id) };
@@ -71,6 +63,25 @@ async function run() {
             // console.log(eventdetail);
             res.send(eventdetail);
         });
+
+
+        // post addEvent
+        app.post("/volunteers", async (req, res) => {
+            const newVolunteer = req.body;
+            console.log(newVolunteer);
+            const result = await eventsCollection.insertOne(newVolunteer);
+            res.send(result);
+        });
+
+        // post regAsVolunteer
+        app.post("/volunteers-detail", async (req, res) => {
+            const newVolunteer = req.body;
+            console.log(newVolunteer);
+            const result = await volunteersDetailCollection.insertOne(newVolunteer);
+            res.send(result);
+        });
+
+
 
     } finally {
         // Ensures that the client will close when you finish/error
