@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // mongodb atlas
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.gyfliot.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -48,7 +48,7 @@ async function run() {
         // post
         app.post("/volunteers", async (req, res) => {
             const newVolunteer = req.body;
-            console.log(newVolunteer);
+            // console.log(newVolunteer);
             const result = await eventsCollection.insertOne(newVolunteer);
             res.send(result);
         });
@@ -59,16 +59,17 @@ async function run() {
             const query = {};
             const cursor = volunteersDetailCollection.find(query);
             const volunteersDetail = await cursor.toArray();
-            console.log(volunteersDetail);
+            // console.log(volunteersDetail);
             res.send(volunteersDetail);
         });
 
-        // post 
-        app.post("/volunteers-detail", async (req, res) => {
-            const newVolunteer = req.body;
-            console.log(newVolunteer);
-            const result = await volunteersDetailCollection.insertOne(newVolunteer);
-            res.send(result);
+        // get
+        app.get("/register-as-volunteer/:eventId", async (req, res) => {
+            const id = req.params.eventId;
+            const query = { _id: new ObjectId(id) };
+            const eventdetail = await eventsCollection.findOne(query);
+            // console.log(eventdetail);
+            res.send(eventdetail);
         });
 
     } finally {
